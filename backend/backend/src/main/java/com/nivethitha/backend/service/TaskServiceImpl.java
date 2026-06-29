@@ -1,4 +1,5 @@
 package com.nivethitha.backend.service;
+import org.springframework.data.domain.Sort;
 
 import com.nivethitha.backend.dto.TaskRequestDto;
 import com.nivethitha.backend.dto.TaskResponseDto;
@@ -41,9 +42,15 @@ public Page<TaskResponseDto> getAllTasks(
         int page,
         int size,
         TaskStatus status,
-        Priority priority) {
+        Priority priority,
+        String sortBy,
+        String direction) {
 
-    Pageable pageable = PageRequest.of(page, size);
+    Sort sort = direction.equalsIgnoreCase("desc")
+            ? Sort.by(sortBy).descending()
+            : Sort.by(sortBy).ascending();
+
+    Pageable pageable = PageRequest.of(page, size, sort);
 
     Page<Task> tasks;
 
@@ -64,7 +71,6 @@ public Page<TaskResponseDto> getAllTasks(
             tasks.getTotalElements()
     );
 }
-
     @Override
     public TaskResponseDto getTaskById(Long id) {
 

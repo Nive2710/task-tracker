@@ -11,10 +11,12 @@ public interface TaskService {
     TaskResponseDto createTask(TaskRequestDto request);
 
     Page<TaskResponseDto> getAllTasks(
-            int page,
-            int size,
-            TaskStatus status,
-            Priority priority);
+        int page,
+        int size,
+        TaskStatus status,
+        Priority priority,
+        String sortBy,
+        String direction);
 
     TaskResponseDto getTaskById(Long id);
 

@@ -36,13 +36,19 @@ public Page<TaskResponseDto> getAllTasks(
 
         @RequestParam(required = false) TaskStatus status,
 
-        @RequestParam(required = false) Priority priority) {
+        @RequestParam(required = false) Priority priority,
+
+        @RequestParam(defaultValue = "id") String sortBy,
+
+        @RequestParam(defaultValue = "asc") String direction) {
 
     return taskService.getAllTasks(
             page,
             size,
             status,
-            priority);
+            priority,
+            sortBy,
+            direction);
 }
 
     @GetMapping("/{id}")
