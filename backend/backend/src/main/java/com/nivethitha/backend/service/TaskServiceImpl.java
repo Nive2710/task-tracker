@@ -6,6 +6,12 @@ import com.nivethitha.backend.entity.Task;
 import com.nivethitha.backend.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.nivethitha.backend.entity.Priority;
+import com.nivethitha.backend.entity.TaskStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,13 +37,33 @@ task.setDueDate(request.getDueDate());
     }
 
     @Override
-    public List<TaskResponseDto> getAllTasks() {
+public Page<TaskResponseDto> getAllTasks(
+        int page,
+        int size,
+        TaskStatus status,
+        Priority priority) {
 
-        return taskRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Task> tasks;
+
+    if (status != null) {
+        tasks = taskRepository.findByStatus(status, pageable);
+    } else if (priority != null) {
+        tasks = taskRepository.findByPriority(priority, pageable);
+    } else {
+        tasks = taskRepository.findAll(pageable);
     }
+
+    return new PageImpl<>(
+            tasks.getContent()
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList(),
+            pageable,
+            tasks.getTotalElements()
+    );
+}
 
     @Override
     public TaskResponseDto getTaskById(Long id) {

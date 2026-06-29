@@ -2,14 +2,19 @@ package com.nivethitha.backend.service;
 
 import com.nivethitha.backend.dto.TaskRequestDto;
 import com.nivethitha.backend.dto.TaskResponseDto;
-
-import java.util.List;
+import com.nivethitha.backend.entity.Priority;
+import com.nivethitha.backend.entity.TaskStatus;
+import org.springframework.data.domain.Page;
 
 public interface TaskService {
 
     TaskResponseDto createTask(TaskRequestDto request);
 
-    List<TaskResponseDto> getAllTasks();
+    Page<TaskResponseDto> getAllTasks(
+            int page,
+            int size,
+            TaskStatus status,
+            Priority priority);
 
     TaskResponseDto getTaskById(Long id);
 
