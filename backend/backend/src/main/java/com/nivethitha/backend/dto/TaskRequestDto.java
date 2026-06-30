@@ -18,6 +18,7 @@ public class TaskRequestDto {
     private Priority priority;
 
     private LocalDate dueDate;
+    private Long projectId;
 
     public String getTitle() {
         return title;
@@ -58,4 +59,11 @@ public class TaskRequestDto {
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
+    public Long getProjectId() {
+    return projectId;
+}
+
+public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+}
 }

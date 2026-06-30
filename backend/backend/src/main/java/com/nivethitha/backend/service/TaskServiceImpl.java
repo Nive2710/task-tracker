@@ -13,6 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import com.nivethitha.backend.exception.ResourceNotFoundException;
+import com.nivethitha.backend.entity.Project;
+import com.nivethitha.backend.repository.ProjectRepository;
+
 
 import java.util.List;
 
@@ -21,6 +25,7 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     public TaskResponseDto createTask(TaskRequestDto request) {
@@ -31,6 +36,17 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(request.getStatus());
         task.setPriority(request.getPriority());
 task.setDueDate(request.getDueDate());
+if (request.getProjectId() != null) {
+
+    Project project = projectRepository.findById(
+            request.getProjectId())
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Project not found with id: "
+                                    + request.getProjectId()));
+
+    task.setProject(project);
+}
 
         Task savedTask = taskRepository.save(task);
 
@@ -74,9 +90,9 @@ public Page<TaskResponseDto> getAllTasks(
     @Override
     public TaskResponseDto getTaskById(Long id) {
 
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-
+       Task task = taskRepository.findById(id)
+        .orElseThrow(() ->
+        new ResourceNotFoundException("Task not found with id: " + id));
         return mapToResponse(task);
     }
 
@@ -84,13 +100,25 @@ public Page<TaskResponseDto> getAllTasks(
     public TaskResponseDto updateTask(Long id, TaskRequestDto request) {
 
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() ->
+        new ResourceNotFoundException("Task not found with id: " + id));
 
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setStatus(request.getStatus());
         task.setPriority(request.getPriority());
 task.setDueDate(request.getDueDate());
+if (request.getProjectId() != null) {
+
+    Project project = projectRepository.findById(
+            request.getProjectId())
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Project not found with id: "
+                                    + request.getProjectId()));
+
+    task.setProject(project);
+}
 
         Task updatedTask = taskRepository.save(task);
 
@@ -113,6 +141,9 @@ task.setDueDate(request.getDueDate());
         response.setStatus(task.getStatus());
         response.setPriority(task.getPriority());
 response.setDueDate(task.getDueDate());
+if (task.getProject() != null) {
+    response.setProjectId(task.getProject().getId());
+}
 
         return response;
     }

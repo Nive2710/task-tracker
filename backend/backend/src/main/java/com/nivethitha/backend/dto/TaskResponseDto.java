@@ -12,6 +12,7 @@ public class TaskResponseDto {
     private TaskStatus status;
     private Priority priority;
 private LocalDate dueDate;
+private Long projectId;
 
     public Long getId() {
         return id;
@@ -58,5 +59,12 @@ public LocalDate getDueDate() {
 
 public void setDueDate(LocalDate dueDate) {
     this.dueDate = dueDate;
+}
+public Long getProjectId() {
+    return projectId;
+}
+
+public void setProjectId(Long projectId) {
+    this.projectId = projectId;
 }
 }
