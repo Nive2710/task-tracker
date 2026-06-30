@@ -5,6 +5,8 @@ import com.nivethitha.backend.dto.TaskResponseDto;
 import com.nivethitha.backend.entity.Priority;
 import com.nivethitha.backend.entity.TaskStatus;
 import org.springframework.data.domain.Page;
+import com.nivethitha.backend.dto.TaskStatsDto;
+import org.springframework.data.domain.Page;
 
 public interface TaskService {
 
@@ -23,4 +25,9 @@ public interface TaskService {
     TaskResponseDto updateTask(Long id, TaskRequestDto request);
 
     void deleteTask(Long id);
+    Page<TaskResponseDto> searchTasks(
+        String keyword,
+        int page,
+        int size);
+    TaskStatsDto getTaskStatistics();
 }

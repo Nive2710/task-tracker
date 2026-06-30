@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.nivethitha.backend.entity.Priority;
 import com.nivethitha.backend.entity.TaskStatus;
 import org.springframework.data.domain.Page;
+import com.nivethitha.backend.dto.TaskStatsDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -49,6 +51,25 @@ public Page<TaskResponseDto> getAllTasks(
             priority,
             sortBy,
             direction);
+}
+@GetMapping("/stats")
+public TaskStatsDto getTaskStatistics() {
+
+    return taskService.getTaskStatistics();
+}
+@GetMapping("/search")
+public Page<TaskResponseDto> searchTasks(
+
+        @RequestParam String keyword,
+
+        @RequestParam(defaultValue = "0") int page,
+
+        @RequestParam(defaultValue = "5") int size) {
+
+    return taskService.searchTasks(
+            keyword,
+            page,
+            size);
 }
 
     @GetMapping("/{id}")

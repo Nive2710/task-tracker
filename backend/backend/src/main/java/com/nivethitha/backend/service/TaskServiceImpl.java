@@ -16,6 +16,12 @@ import org.springframework.data.domain.Pageable;
 import com.nivethitha.backend.exception.ResourceNotFoundException;
 import com.nivethitha.backend.entity.Project;
 import com.nivethitha.backend.repository.ProjectRepository;
+import com.nivethitha.backend.dto.TaskStatsDto;
+import com.nivethitha.backend.entity.TaskStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
@@ -147,4 +153,44 @@ if (task.getProject() != null) {
 
         return response;
     }
+    @Override
+public TaskStatsDto getTaskStatistics() {
+
+    TaskStatsDto stats = new TaskStatsDto();
+
+    stats.setTotalTasks(taskRepository.count());
+
+    stats.setPendingTasks(
+            taskRepository.countByStatus(TaskStatus.PENDING));
+
+    stats.setInProgressTasks(
+            taskRepository.countByStatus(TaskStatus.IN_PROGRESS));
+
+    stats.setCompletedTasks(
+            taskRepository.countByStatus(TaskStatus.COMPLETED));
+
+    return stats;
+}
+@Override
+public Page<TaskResponseDto> searchTasks(
+        String keyword,
+        int page,
+        int size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Task> tasks =
+            taskRepository.findByTitleContainingIgnoreCase(
+                    keyword,
+                    pageable);
+
+    return new PageImpl<>(
+            tasks.getContent()
+                    .stream()
+                    .map(this::mapToResponse)
+                    .toList(),
+            pageable,
+            tasks.getTotalElements()
+    );
+}
 }
